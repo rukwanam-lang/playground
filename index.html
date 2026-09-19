@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Moomie shares a little lyric with every tap.">
+  <title>Moomie</title>
+  <style>
+    :root { --ink: #30254a; --paper: #fffaf2; --sky: #b9e6ff; --sun: #ffd77d; }
+    * { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; display: grid; place-items: center; overflow: hidden; color: var(--ink); font: 600 clamp(1rem, 2vw, 1.2rem)/1.35 system-ui, sans-serif; background: radial-gradient(circle at 18% 16%, #fff 0 2%, transparent 2.2%), radial-gradient(circle at 82% 26%, #fff 0 1.5%, transparent 1.7%), linear-gradient(150deg, var(--sky), #d8c7ff 58%, var(--sun)); }
+    main { display: grid; justify-items: center; gap: 1.4rem; padding: 2rem; }
+    .bubble { position: relative; max-width: min(28rem, 86vw); padding: 1rem 1.3rem; border: 3px solid var(--ink); border-radius: 1.2rem; background: var(--paper); box-shadow: 6px 7px 0 var(--ink); text-align: center; transition: opacity .18s ease, transform .18s ease; }
+    .bubble::after { content: ""; position: absolute; bottom: -1rem; left: 50%; width: 1.25rem; height: 1.25rem; background: var(--paper); border-right: 3px solid var(--ink); border-bottom: 3px solid var(--ink); transform: translateX(-50%) rotate(45deg); }
+    .bubble.fading { opacity: 0; transform: scale(.94); }
+    .mascot { width: min(68vw, 23rem); aspect-ratio: 1; border: 0; padding: 0; background: none; cursor: pointer; filter: drop-shadow(8px 10px 0 rgb(48 37 74 / .2)); }
+    .mascot:focus-visible { outline: 4px solid var(--paper); outline-offset: 8px; border-radius: 1rem; }
+    .mascot img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    footer { font-size: .75rem; opacity: .72; }
+    @media (prefers-reduced-motion: reduce) { .bubble { transition: none; } }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="bubble" id="lyric" aria-live="polite">Sunlight keeps a secret in its sleeve.</p>
+    <button class="mascot" id="moomie" type="button" aria-label="Show another lyric">
+      <img src="moomie.webp" alt="Moomie, an animated mascot">
+    </button>
+    <footer>Lyrics: original and public-domain works</footer>
+  </main>
+  <script>
+    const lyrics = [
+      "Sunlight keeps a secret in its sleeve.",
+      "Small stars make room for morning.",
+      "A soft hello can cross a whole sky.",
+      "Clouds drift where daydreams point.",
+      "Every tiny step makes a bright sound.",
+      "Moonlight knows the way home.",
+      "Keep a pocket full of blue.",
+      "Kindness leaves glitter in the air.",
+      "The wind hums a tune for us.",
+      "Today has room for wonder.",
+      "A happy heart makes its own weather.",
+      "We are learning how to glow."
+    ];
+
+    const bubble = document.querySelector("#lyric");
+    let current = 0;
+    function nextIndex(previous) {
+      return (previous + 1 + Math.floor(Math.random() * (lyrics.length - 1))) % lyrics.length;
+    }
+    document.querySelector("#moomie").addEventListener("click", () => {
+      bubble.classList.add("fading");
+      setTimeout(() => {
+        current = nextIndex(current);
+        bubble.textContent = lyrics[current];
+        bubble.classList.remove("fading");
+      }, 180);
+    });
+    console.assert(nextIndex(0) !== 0, "Moomie must not repeat a lyric immediately");
+  </script>
+</body>
+</html>
